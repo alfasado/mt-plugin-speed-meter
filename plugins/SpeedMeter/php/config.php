@@ -5,6 +5,9 @@ class SpeedMeter extends MTPlugin {
         'name' => 'SpeedMeter',
         'id'   => 'SpeedMeter',
         'key'  => 'speedmeter',
+        'config_settings' => array(
+            'SpeedMeterDebugScope' => array( 'default' => 'log' ),
+        ),
         'tags' => array(
             'block' => array( 'speedmeter' => '_hdlr_speedmeter' ),
         ),
@@ -19,6 +22,11 @@ class SpeedMeter extends MTPlugin {
             $ctx->stash( $key, microtime( TRUE ) );
         } else {
             $app = $ctx->stash( 'bootstrapper' );
+            $scope = strtolower( $app->config( 'SpeedMeterDebugScope' ) );
+            if ( (! $scope ) || ( $scope && $scope == 'none' ) ) {
+                $repeat = FALSE;
+                return $content;
+            }
             $name = $args[ 'name' ];
             $repeat = FALSE;
             $key = $ctx->stash( 'speedmeter_id' );
@@ -26,9 +34,15 @@ class SpeedMeter extends MTPlugin {
             $end = microtime( TRUE );
             $ctx->restore( $localvars );
             $time = $end - $start;
-            $message = $app->translate( 'The files for [_1] have been published.', "'{$name}'" );
+            $message = $app->translate( 'The template for [_1] have been build.', "'{$name}'" );
             $message .= $app->translate( 'Publish time: [_1].', $time );
-            $app->log( $message );
+            if ( $scope == 'log' ) {
+                $app->log( $message );
+            } elseif ( $scope == 'screen' ) {
+                $prefix = $args[ 'prefix' ] || '';
+                $suffix = $args[ 'suffix' ] || '';
+                $content .= $prefix . $message . $suffix;
+            }
             return $content;
         }
     }
