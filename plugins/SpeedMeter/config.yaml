@@ -1,14 +1,15 @@
 name: SpeedMeter
 id:   SpeedMeter
 key:  speedmeter
-version: 0.2
+version: 0.21
 author_link: https://alfasado.net/
 author_name: Alfasado Inc.
 l10n_class: SpeedMeter::L10N
 description: <__trans phrase="Logging the time to rebuild.">
 config_settings:
     SpeedMeterDebugScope:
-        Default: log
+        default: log
+        updatable: 1
 tags:
     block:
         SpeedMeter: $speedmeter::SpeedMeter::Plugin::_hdlr_speedmeter
