@@ -10,7 +10,8 @@ sub _hdlr_speedmeter {
     if ( (! $scope ) || ( $scope && $scope eq 'none' ) ) {
         return $ctx->stash( 'builder' )->build( $ctx, $ctx->stash( 'tokens' ), $cond );
     }
-    my $name = $args->{ name };
+    my $tmpl = $ctx->stash( 'template' );
+    my $name = $args->{ name } ? $args->{ name } : $tmpl->name;
     my $start = Time::HiRes::time();
     my $value = $ctx->stash( 'builder' )->build( $ctx, $ctx->stash( 'tokens' ), $cond );
     my $end = Time::HiRes::time();
