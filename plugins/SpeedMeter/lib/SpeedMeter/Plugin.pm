@@ -19,7 +19,12 @@ sub _hdlr_speedmeter {
     my $message = $plugin->translate( 'The template for [_1] have been build.', "'$name'" );
     $message .= $plugin->translate( 'Publish time: [_1].', $time );
     if ( $scope eq 'log' ) {
-        MT->log( $message );
+        my $app = MT->instance();
+        $app->log( {
+            message => $message,
+            level => MT::Log::DEBUG(),
+            category => $plugin->id,
+        } );
     } elsif ( $scope eq 'screen' ) {
         my $prefix = $args->{ prefix } || '';
         my $suffix = $args->{ suffix } || '';
